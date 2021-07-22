@@ -21,7 +21,8 @@ func main() {
 	h := homepage.NewHandlers(logger)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", h.Home)
+
+	h.SetupRoutes(mux)
 
 	srv := server.New(mux, GcukServiceAddr)
 

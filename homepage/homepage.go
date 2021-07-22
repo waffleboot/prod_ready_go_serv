@@ -26,6 +26,10 @@ func (h *Handlers) Logger(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func (h *Handlers) SetupRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("/", h.Home)
+}
+
 func NewHandlers(logger *log.Logger) *Handlers {
 	return &Handlers{log: logger}
 }
