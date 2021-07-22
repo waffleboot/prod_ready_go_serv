@@ -3,9 +3,18 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+
+	"gopherconuk/server"
 )
 
 const message = "hello"
+
+var (
+	GcukCertFile    = os.Getenv("GCUK_CERT_FILE")
+	GcukKeyFile     = os.Getenv("GCUK_KEY_FILE")
+	GcukServiceAddr = os.Getenv("GCUK_SERVICE_ADDR")
+)
 
 func main() {
 	mux := http.NewServeMux()
@@ -14,7 +23,9 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(message))
 	})
-	err := http.ListenAndServe(":8080", mux)
+
+	srv := server.New(mux, GcukServiceAddr)
+	err := srv.ListenAndServeTLS(GcukCertFile, GcukKeyFile)
 	if err != nil {
 		log.Fatalf("server failed to start: %v", err)
 	}
