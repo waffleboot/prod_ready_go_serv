@@ -16,12 +16,16 @@ var (
 )
 
 func main() {
+	logger := log.New(os.Stdout, "gcuk ", log.LstdFlags|log.Lshortfile)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", homepage.HomeHandler)
 
 	srv := server.New(mux, GcukServiceAddr)
+
+	logger.Println("server starting")
 	err := srv.ListenAndServeTLS(GcukCertFile, GcukKeyFile)
 	if err != nil {
-		log.Fatalf("server failed to start: %v", err)
+		logger.Fatalf("server failed to start: %v", err)
 	}
 }
