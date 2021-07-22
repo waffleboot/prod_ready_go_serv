@@ -1,3 +1,3 @@
-module github.com/waffleboot/srv
+module gopherconuk
 
 go 1.16
