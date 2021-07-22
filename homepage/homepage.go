@@ -1,11 +1,31 @@
 package homepage
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+	"time"
+)
 
 const message = "hello"
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
+type Handlers struct {
+	log *log.Logger
+}
+
+func (h *Handlers) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(message))
+}
+
+func (h *Handlers) Logger(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		starttime := time.Now()
+		defer h.log.Printf("request processed in %s\n", time.Now().Sub(starttime))
+		next(w, r)
+	}
+}
+
+func NewHandlers(logger *log.Logger) *Handlers {
+	return &Handlers{log: logger}
 }
